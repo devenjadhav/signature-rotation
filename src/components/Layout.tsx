@@ -1,13 +1,18 @@
-
 import React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useSignature } from '@/contexts/SignatureContext';
+import { useAuth } from '@/contexts/AuthContext';
+import { Button } from '@/components/ui/button';
+import { LogOut } from 'lucide-react';
 
 interface LayoutProps {
   children: React.ReactNode;
 }
 
 const Layout = ({ children }: LayoutProps) => {
+  const { settings } = useSignature();
+  const { signOut, user } = useAuth();
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-100 dark:from-gray-900 dark:to-gray-800">
       <header className="border-b bg-white/50 backdrop-blur-md dark:bg-gray-950/50 shadow-sm">
@@ -23,7 +28,24 @@ const Layout = ({ children }: LayoutProps) => {
               Gmail Signature Rotator
             </h1>
           </div>
-          <ConnectedStatus />
+          <div className="flex items-center space-x-4">
+            <ConnectedStatus />
+            {user && (
+              <div className="flex items-center space-x-2">
+                <span className="text-sm text-gray-600 dark:text-gray-300">
+                  {user.email}
+                </span>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => signOut()}
+                  title="Sign out"
+                >
+                  <LogOut className="h-4 w-4" />
+                </Button>
+              </div>
+            )}
+          </div>
         </div>
       </header>
       <main className="container mx-auto px-4 py-6 md:py-10">
